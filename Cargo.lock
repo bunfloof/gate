@@ -812,6 +812,7 @@ dependencies = [
  "hickory-resolver",
  "hmac",
  "log",
+ "percent-encoding",
  "rand 0.8.6",
  "reqwest",
  "serde",

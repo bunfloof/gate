@@ -12,8 +12,9 @@ use futures_util::StreamExt;
 use serde_json::{json, Value};
 use std::net::IpAddr;
 use std::path::{Path, PathBuf};
+use percent_encoding::percent_decode_str;
 
-const PORT: u16 = 4287;
+const PORT: u16 = 25720;
 
 struct AppState {
     secret: Vec<u8>,
@@ -191,7 +192,8 @@ fn serve_gate_shell(diag: bool) -> HttpResponse {
 }
 
 fn resolve_file(public_dir: &Path, raw_path: &str) -> Option<PathBuf> {
-    let trimmed = raw_path.trim_start_matches('/');
+    let decoded = percent_decode_str(raw_path).decode_utf8().ok()?;
+    let trimmed = decoded.trim_start_matches('/');
     let rel = if trimmed.is_empty() { "index.html" } else { trimmed };
 
     if rel.split('/').any(|seg| seg == "..") {
